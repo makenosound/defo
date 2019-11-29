@@ -21,11 +21,15 @@
               }
             };
           },
-          else: (el, props) => {
+          content: (el, props) => {
+            const original = el.innerHTML;
+            el.innerHTML = props;
             return {
               update: (newProps, oldProps) => {
+                el.innerHTML = `${newProps} <strike>${oldProps}</strike>`;
               },
               destroy: () => {
+                el.innerHTML = original;
               }
             };
           }
@@ -36,11 +40,9 @@
   </head>
   <body>
     <p>Hello</p>
-    <div data-defo-color="#f09">
-      <p>Inner content</p>
-    </div>
-    <div data-defo-color="#fc0" data-defo-else="foo">
-      <p>Inner content</p>
+    <div data-defo-color="#f09">Inner content</div>
+    <div data-defo-color="#fc0" data-defo-content="Content from JS">
+      Inner content
     </div>
   </body>
 </html>
