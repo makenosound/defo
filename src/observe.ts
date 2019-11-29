@@ -42,6 +42,9 @@ export default function observe({
         // Need to destroy all removedNodes
         Array.prototype.slice
           .call(mutation.removedNodes)
+          .filter((node: DefoHTMLElement): Boolean => {
+            return !node.TEXT_NODE;
+          })
           .filter(
             (node: DefoHTMLElement): Boolean =>
               hasDatasetKeysMatchingPrefix(node, prefix)
@@ -57,6 +60,9 @@ export default function observe({
         // NodeList so we need to traverse)
         Array.prototype.slice
           .call(mutation.addedNodes)
+          .filter((node: DefoHTMLElement): Boolean => {
+            return !node.TEXT_NODE;
+          })
           .forEach((node: DefoHTMLElement): void => {
             // Wrap and then unwrap the added node to ensure the call order
             // is correct (the `destroy` methods are resolved as promises and
