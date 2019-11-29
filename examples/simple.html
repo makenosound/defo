@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Defo — Simple example</title>
+    <script src="../dist/index.bundle.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const views = {
+          color: (el, color) => {
+            console.log("Init color");
+            el.style.border = `1px solid ${color}`;
+            return {
+              update: (newColor, oldColor) => {
+                console.log("Update color");
+                el.style.border = `1px solid ${newColor}`;
+                el.style.background = oldColor;
+              },
+              destroy: () => {
+                console.log("Destroy color");
+                el.style.border = "none";
+              }
+            };
+          },
+          else: (el, props) => {
+            return {
+              update: (newProps, oldProps) => {
+              },
+              destroy: () => {
+              }
+            };
+          }
+        };
+        const defo = Defo({ views });
+      });
+    </script>
+  </head>
+  <body>
+    <p>Hello</p>
+    <div data-defo-color="#f09">
+      <p>Inner content</p>
+    </div>
+    <div data-defo-color="#fc0" data-defo-else="foo">
+      <p>Inner content</p>
+    </div>
+  </body>
+</html>
