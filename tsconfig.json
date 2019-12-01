@@ -7,8 +7,9 @@
     "outDir": "./dist",
     "target": "es2015",
     "skipLibCheck": true,
-    "types": []
+    "types": ["jest", "nanohtml/dom"],
+    "typeRoots": ["node_modules/@types", "./types"]
   },
   "include": ["src/index.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./types"]
 }

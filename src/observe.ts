@@ -1,5 +1,10 @@
 import { DefoHTMLElement, Views } from "./types";
-import renderTree, {renderNode} from "./render";
+import renderTree, { renderNode } from "./render";
+import {
+  attributeNameMatchesPrefix,
+  attributeNameToViewName,
+  hasDatasetKeysMatchingPrefix
+} from "./helpers";
 
 export default function observe({
   prefix,
@@ -42,9 +47,11 @@ export default function observe({
         // Need to destroy all removedNodes
         Array.prototype.slice
           .call(mutation.removedNodes)
-          .filter((node: DefoHTMLElement): Boolean => {
-            return !node.TEXT_NODE;
-          })
+          .filter(
+            (node: DefoHTMLElement): Boolean => {
+              return node.nodeType !== node.TEXT_NODE;
+            }
+          )
           .filter(
             (node: DefoHTMLElement): Boolean =>
               hasDatasetKeysMatchingPrefix(node, prefix)
@@ -60,9 +67,11 @@ export default function observe({
         // NodeList so we need to traverse)
         Array.prototype.slice
           .call(mutation.addedNodes)
-          .filter((node: DefoHTMLElement): Boolean => {
-            return !node.TEXT_NODE;
-          })
+          .filter(
+            (node: DefoHTMLElement): Boolean => {
+              return node.nodeType !== node.TEXT_NODE;
+            }
+          )
           .forEach((node: DefoHTMLElement): void => {
             // Wrap and then unwrap the added node to ensure the call order
             // is correct (the `destroy` methods are resolved as promises and
@@ -84,33 +93,4 @@ export default function observe({
   });
 
   return observer;
-}
-
-function datasetKeysForPrefix(
-  node: HTMLElement,
-  prefix: string
-): Array<string> {
-  // Index will be 0 since we’re matching `${prefix}${ViewName}`
-  return Object.keys(node.dataset).filter(key => key.indexOf(prefix) === 0);
-}
-
-function hasDatasetKeysMatchingPrefix(node: HTMLElement, prefix: string) {
-  return datasetKeysForPrefix(node, prefix).length > 0;
-}
-
-function attributeNameMatchesPrefix(
-  attributeName: string,
-  prefix: string
-): boolean {
-  return attributeName.indexOf(`data-${prefix}`) === 0;
-}
-
-function attributeNameToViewName(attributeName: string): string {
-  return attributeName
-    .split("-")
-    .slice(2) // Skip `data-prefix` of `data-prefix-view-name`
-    .map((part: string, index: Number) => {
-      return index > 0 ? part.charAt(0).toUpperCase() + part.slice(1) : part;
-    })
-    .join("");
 }
