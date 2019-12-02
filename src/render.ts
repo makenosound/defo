@@ -35,14 +35,14 @@ export default function renderTree({
       nodes = [scope].concat(nodes);
     }
     nodes.forEach((node: DefoHTMLElement) => {
-      renderNode(node, prefix, views, viewName);
+      renderViewForNode(node, prefix, views, viewName);
     });
   });
 }
 
 // TODO generate hash from views object and use to namespace? Would only be
 // useful for when individual view methods are updated (will that ever happen?)
-export function renderNode(
+export function renderViewForNode(
   node: DefoHTMLElement,
   prefix: string,
   views: Views,

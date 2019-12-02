@@ -1,5 +1,5 @@
 import { DefoHTMLElement, Views } from "./types";
-import renderTree, { renderNode } from "./render";
+import renderTree, { renderViewForNode } from "./render";
 import {
   attributeNameMatchesPrefix,
   attributeNameToViewName,
@@ -15,8 +15,10 @@ export default function observe({
   scope: HTMLElement;
   views: Views;
 }): MutationObserver {
+  // Render on load
   renderTree({ prefix, scope, views });
-  const observer = new window.MutationObserver(mutations => {
+
+  const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
       const target = mutation.target as DefoHTMLElement;
       if (
@@ -36,7 +38,7 @@ export default function observe({
           );
         } else {
           // Attribute is new (but element isn’t)
-          renderNode(target, prefix, views, viewName);
+          renderViewForNode(target, prefix, views, viewName);
         }
 
         // TODO also need to handle cases where a node hasn't been removed, but
