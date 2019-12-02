@@ -4,7 +4,5 @@ export default function defo({ prefix, scope, views }?: {
     scope?: HTMLElement;
     views?: Views;
 }): {
-    registerViews: (viewsToAdd: Views) => Views;
-    unregisterViews: (viewsToRemove: string[]) => Views;
     destroy: () => void;
 };

@@ -1,7 +1,9 @@
-import renderTree, { renderNode } from "./render";
+import renderTree, { renderViewForNode } from "./render";
+import { attributeNameMatchesPrefix, attributeNameToViewName, hasDatasetKeysMatchingPrefix } from "./helpers";
 export default function observe({ prefix, scope, views }) {
+    // Render on load
     renderTree({ prefix, scope, views });
-    const observer = new window.MutationObserver(mutations => {
+    const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             const target = mutation.target;
             if (mutation.type === "attributes" &&
@@ -18,7 +20,7 @@ export default function observe({ prefix, scope, views }) {
                 }
                 else {
                     // Attribute is new (but element isn’t)
-                    renderNode(target, prefix, views, viewName);
+                    renderViewForNode(target, prefix, views, viewName);
                 }
                 // TODO also need to handle cases where a node hasn't been removed, but
                 // its *view attributes* might have been (i.e., destroying that view)
@@ -65,24 +67,4 @@ export default function observe({ prefix, scope, views }) {
         subtree: true
     });
     return observer;
-}
-// TODO Be nice to be able to export these in test only
-function datasetKeysForPrefix(node, prefix) {
-    // Index will be 0 since we’re matching `${prefix}${ViewName}`
-    return Object.keys(node.dataset).filter(key => key.indexOf(prefix) === 0);
-}
-export function hasDatasetKeysMatchingPrefix(node, prefix) {
-    return datasetKeysForPrefix(node, prefix).length > 0;
-}
-export function attributeNameMatchesPrefix(attributeName, prefix) {
-    return attributeName.indexOf(`data-${prefix}`) === 0;
-}
-export function attributeNameToViewName(attributeName) {
-    return attributeName
-        .split("-")
-        .slice(2) // Skip `data-prefix` of `data-prefix-view-name`
-        .map((part, index) => {
-        return index > 0 ? part.charAt(0).toUpperCase() + part.slice(1) : part;
-    })
-        .join("");
 }
