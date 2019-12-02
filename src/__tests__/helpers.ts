@@ -99,15 +99,3 @@ describe("Case conversions", () => {
     expect(capitalize("fooBar")).toBe("FooBar");
   });
 });
-
-// Binding after DOM complete
-// Binding before DOM complete
-// New element added to the DOM
-// Attribute update
-// Element removed
-// New attribute added
-// Attribute removed
-// Multiple attributes
-// Update
-// Destroy
-// Not called once initialized

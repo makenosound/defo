@@ -6,4 +6,5 @@ export default function defo({ prefix, scope, views }?: {
 }): {
     registerViews: (viewsToAdd: Views) => Views;
     unregisterViews: (viewsToRemove: string[]) => Views;
+    destroy: () => void;
 };

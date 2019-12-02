@@ -91,7 +91,3 @@ export function parseProps(value) {
     }
     return value;
 }
-/**
- * No-operation
- */
-function noop() { }

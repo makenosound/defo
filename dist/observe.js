@@ -29,6 +29,9 @@ export default function observe({ prefix, scope, views }) {
                 // Need to destroy all removedNodes
                 Array.prototype.slice
                     .call(mutation.removedNodes)
+                    .filter((node) => {
+                    return node.nodeType !== node.TEXT_NODE;
+                })
                     .filter((node) => hasDatasetKeysMatchingPrefix(node, prefix))
                     .forEach((node) => {
                     // Call each destroy method attached to the node
@@ -40,6 +43,9 @@ export default function observe({ prefix, scope, views }) {
                 // NodeList so we need to traverse)
                 Array.prototype.slice
                     .call(mutation.addedNodes)
+                    .filter((node) => {
+                    return node.nodeType !== node.TEXT_NODE;
+                })
                     .forEach((node) => {
                     // Wrap and then unwrap the added node to ensure the call order
                     // is correct (the `destroy` methods are resolved as promises and
@@ -60,17 +66,18 @@ export default function observe({ prefix, scope, views }) {
     });
     return observer;
 }
+// TODO Be nice to be able to export these in test only
 function datasetKeysForPrefix(node, prefix) {
     // Index will be 0 since we’re matching `${prefix}${ViewName}`
     return Object.keys(node.dataset).filter(key => key.indexOf(prefix) === 0);
 }
-function hasDatasetKeysMatchingPrefix(node, prefix) {
+export function hasDatasetKeysMatchingPrefix(node, prefix) {
     return datasetKeysForPrefix(node, prefix).length > 0;
 }
-function attributeNameMatchesPrefix(attributeName, prefix) {
+export function attributeNameMatchesPrefix(attributeName, prefix) {
     return attributeName.indexOf(`data-${prefix}`) === 0;
 }
-function attributeNameToViewName(attributeName) {
+export function attributeNameToViewName(attributeName) {
     return attributeName
         .split("-")
         .slice(2) // Skip `data-prefix` of `data-prefix-view-name`
