@@ -53,13 +53,14 @@ export function renderNode(
     return;
   }
   const viewFunction = views[viewName];
-  if (!viewFunction) {
+  const datasetkey = keyForDataset(prefix, viewName);
+  if (!viewFunction || !(datasetkey in node.dataset)) {
     return;
   }
   // Call the defined view function
   const returnValue = viewFunction(
     node,
-    parseProps(node.dataset[keyForDataset(prefix, viewName)])
+    parseProps(node.dataset[datasetkey])
   );
   // Set any update/destroy methods from the returned value of the view
   // call directly on the node.

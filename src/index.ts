@@ -10,10 +10,11 @@ export default function defo({
   scope?: HTMLElement;
   views?: Views;
 } = {}) {
-  const observer = observe({prefix, scope, views});
+  const observer = observe({ prefix, scope, views });
 
   return {
+    destroy: (): void => {
+      observer.disconnect();
     }
-    // render
   };
 }
