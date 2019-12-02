@@ -1,7 +1,7 @@
 {
   "name": "@icelab/defo",
   "version": "0.0.1",
-  "description": "",
+  "description": "A dynamic DOM binding library",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "browser": "dist/index.bundle.js",
