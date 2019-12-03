@@ -22,13 +22,9 @@ export default function observe({ prefix, scope, views }) {
                     // Attribute is new (but element isn’t)
                     renderViewForNode(target, prefix, views, viewName);
                 }
-                // TODO also need to handle cases where a node hasn't been removed, but
-                // its *view attributes* might have been (i.e., destroying that view)
             }
             else if (mutation.type === "childList") {
-                // Can either do what viewloader does and render on everything in scope
-                // or we could drill down on addedNodes here
-                // Need to destroy all removedNodes
+                // Destroy any removed nodes
                 Array.prototype.slice
                     .call(mutation.removedNodes)
                     .filter((node) => {
@@ -42,7 +38,7 @@ export default function observe({ prefix, scope, views }) {
                     });
                 });
                 // Call render on any added nodes (only the root added nodes are in the
-                // NodeList so we need to traverse)
+                // NodeList so we need to traverse the tree)
                 Array.prototype.slice
                     .call(mutation.addedNodes)
                     .filter((node) => {
