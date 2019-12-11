@@ -28,7 +28,7 @@ export default function observe({ prefix, scope, views }) {
                 Array.prototype.slice
                     .call(mutation.removedNodes)
                     .filter((node) => {
-                    return node.nodeType !== node.TEXT_NODE;
+                    return node.nodeType === node.ELEMENT_NODE;
                 })
                     .filter((node) => hasDatasetKeysMatchingPrefix(node, prefix))
                     .forEach((node) => {
@@ -42,7 +42,7 @@ export default function observe({ prefix, scope, views }) {
                 Array.prototype.slice
                     .call(mutation.addedNodes)
                     .filter((node) => {
-                    return node.nodeType !== node.TEXT_NODE;
+                    return node.nodeType === node.ELEMENT_NODE;
                 })
                     .forEach((node) => {
                     // Wrap and then unwrap the added node to ensure the call order
