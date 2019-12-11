@@ -46,7 +46,7 @@ export default function observe({
           .call(mutation.removedNodes)
           .filter(
             (node: DefoHTMLElement): Boolean => {
-              return node.nodeType !== node.TEXT_NODE;
+              return node.nodeType === node.ELEMENT_NODE;
             }
           )
           .filter(
@@ -66,7 +66,7 @@ export default function observe({
           .call(mutation.addedNodes)
           .filter(
             (node: DefoHTMLElement): Boolean => {
-              return node.nodeType !== node.TEXT_NODE;
+              return node.nodeType === node.ELEMENT_NODE;
             }
           )
           .forEach((node: DefoHTMLElement): void => {
