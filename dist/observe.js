@@ -1,8 +1,6 @@
 import renderTree, { renderViewForNode } from "./render";
 import { attributeNameMatchesPrefix, attributeNameToViewName, hasDatasetKeysMatchingPrefix } from "./helpers";
 export default function observe({ prefix, scope, views }) {
-    // Render on load
-    renderTree({ prefix, scope, views });
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             const target = mutation.target;
@@ -62,5 +60,7 @@ export default function observe({ prefix, scope, views }) {
         characterData: false,
         subtree: true
     });
+    // Render on load
+    renderTree({ prefix, scope, views });
     return observer;
 }
