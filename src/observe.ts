@@ -15,9 +15,6 @@ export default function observe({
   scope: HTMLElement;
   views: Views;
 }): MutationObserver {
-  // Render on load
-  renderTree({ prefix, scope, views });
-
   const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
       const target = mutation.target as DefoHTMLElement;
@@ -88,6 +85,9 @@ export default function observe({
     characterData: false,
     subtree: true
   });
+
+  // Render on load
+  renderTree({ prefix, scope, views });
 
   return observer;
 }
