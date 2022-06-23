@@ -21,7 +21,7 @@
     "@types/jest": "^24.0.23",
     "@types/jsdom": "^12.2.4",
     "jest": "^24.9.0",
-    "jsdom": "^15.2.1",
+    "jsdom": "^16.5.0",
     "nanohtml": "^1.9.0",
     "rollup": "^1.27.8",
     "rollup-plugin-terser": "^5.1.2",
