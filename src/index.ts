@@ -4,7 +4,7 @@ import observe from "./observe";
 export default function defo({
   prefix = "defo",
   scope = document.documentElement,
-  views = {}
+  views = {},
 }: {
   prefix?: string;
   scope?: HTMLElement;
@@ -15,6 +15,6 @@ export default function defo({
   return {
     destroy: (): void => {
       observer.disconnect();
-    }
+    },
   };
 }

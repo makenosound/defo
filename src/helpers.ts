@@ -1,3 +1,5 @@
+import { ViewProps } from "./types";
+
 /**
  * Check if a dasherized data-attribute name matches the given prefix
  * I.e., does data-defo-view-name match defo
@@ -19,7 +21,7 @@ export function attributeNameToViewName(attributeName: string): string {
   return attributeName
     .split("-")
     .slice(2) // Skip `data-prefix` of `data-prefix-view-name`
-    .map((part: string, index: Number) => {
+    .map((part: string, index: number) => {
       return index > 0 ? capitalize(part) : part;
     })
     .join("");
@@ -35,7 +37,7 @@ function datasetKeysForPrefix(
   prefix: string
 ): Array<string> {
   // Index will be 0 since we’re matching `${prefix}${ViewName}`
-  return Object.keys(node.dataset).filter(key => key.indexOf(prefix) === 0);
+  return Object.keys(node.dataset).filter((key) => key.indexOf(prefix) === 0);
 }
 
 /**
@@ -78,7 +80,7 @@ export function lowerFirsterize(str: string): string {
     .replace(/^[_.\- ]+/, "")
     .toLowerCase()
     .replace(/[_.\- ]+(\w|$)/g, (_, p1) => p1.toUpperCase())
-    .replace(/\d+(\w|$)/g, m => m.toUpperCase());
+    .replace(/\d+(\w|$)/g, (m) => m.toUpperCase());
 }
 
 /**
@@ -95,12 +97,13 @@ export function capitalize(str: string): string {
  * Return the value of the data-prefix attribute. Parsing it as JSON if it looks
  * like it is JSON content.
  */
-export function parseProps(value: string): string {
+export function parseProps(value: string): ViewProps {
   try {
     return JSON.parse(value);
   } catch (err) {
-    // TODO warn in dev
-    // console.error(err);
+    if (value.startsWith("{")) {
+      console.error(`Failed to parse suspected JSON props: ${value}`);
+    }
   }
   return value;
 }

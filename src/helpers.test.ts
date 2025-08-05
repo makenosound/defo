@@ -1,4 +1,4 @@
-import { JSDOM } from "jsdom";
+import { describe, test, expect, beforeEach, vi } from "vitest";
 import {
   attributeNameMatchesPrefix,
   attributeNameToViewName,
@@ -7,12 +7,9 @@ import {
   hasDatasetKeysMatchingPrefix,
   keyForDataset,
   lowerFirsterize,
-  parseProps
-} from "../helpers";
-var nanohtml = require("nanohtml/dom");
-
-const jsdom = new JSDOM();
-const html = nanohtml(jsdom.window.document);
+  parseProps,
+} from "./helpers";
+import { html } from "../test/helpers";
 
 const prefix = "defo";
 const notPrefix = "not";
@@ -44,12 +41,14 @@ describe("attributeNameMatchesPrefix", () => {
 });
 
 describe("hasDatasetKeysMatchingPrefix", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
   test("returns true if a node has dataset keys matching a given prefix", () => {
     expect(
       hasDatasetKeysMatchingPrefix(
-        html`
-          <p ${attributeName}="true">Node</p>
-        `,
+        html` <p data-defo-view-name="true">Node</p> `,
         prefix
       )
     ).toBe(true);
@@ -57,9 +56,7 @@ describe("hasDatasetKeysMatchingPrefix", () => {
   test("returns false if a node does not have dataset keys matching a given prefix", () => {
     expect(
       hasDatasetKeysMatchingPrefix(
-        html`
-          <p data-${notPrefix}-view-name="true">Node</p>
-        `,
+        html` <p data-not-view-name="true">Node</p> `,
         prefix
       )
     ).toBe(false);
@@ -67,7 +64,7 @@ describe("hasDatasetKeysMatchingPrefix", () => {
 });
 
 describe("keyForDataset", () => {
-  it("generates a lowerFirst dataset key from a given prefix and view name", () => {
+  test("generates a lowerFirst dataset key from a given prefix and view name", () => {
     expect(keyForDataset(prefix, lowerFirstViewName)).toBe(dataSetKey);
   });
 });
@@ -80,9 +77,18 @@ describe("parseProps", () => {
     expect(parseProps("false")).toBe(false);
     expect(parseProps("1")).toBe(1);
   });
-  test("it should gracefully handle invalid JSON", () => {
-    expect(parseProps("{foo")).toBe("{foo");
+  test("it should warn for invalid JSON that looks like JSON", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = parseProps("{foo");
+    expect(result).toBe("{foo");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Failed to parse suspected JSON props: {foo"
+    );
+    consoleSpy.mockRestore();
+  });
+  test("it should return string values as-is when they don't look like JSON", () => {
     expect(parseProps("1 2 3")).toBe("1 2 3");
+    expect(parseProps("hello world")).toBe("hello world");
   });
 });
 
