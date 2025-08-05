@@ -37,9 +37,9 @@ const views = {
       // Caled when the element (or its defo attribute) is removed from the DOM
       destroy: () => {
         el.value = "";
-      }
+      },
     };
-  }
+  },
 };
 
 // Create a defo instance
@@ -47,15 +47,15 @@ const instance = defo({ views });
 ```
 
 When initialized defo will call the view functions of any matching elements that
-are in the DOM, as well as for *any and all future changes to the DOM*.
+are in the DOM, as well as for _any and all future changes to the DOM_.
 
 ## Options
 
 The `defo` function takes three options arguments:
 
-* `scope` — a DOM scope for defo to use. Defaults to `document.documentElement`.
-* `prefix` — The prefix used for namespacing data attributes. Defaults to `defo`.
-* `views` — an object for mapping view functions to known attribute names
+- `scope` — a DOM scope for defo to use. Defaults to `document.documentElement`.
+- `prefix` — The prefix used for namespacing data attributes. Defaults to `defo`.
+- `views` — an object for mapping view functions to known attribute names
 
 ## View functions API
 
@@ -74,8 +74,8 @@ function viewName(el, props) {
 The view function itself will be called on initialization for a given DOM node,
 and will receive two agruments:
 
-* `el` — the DOM node that triggered the instance of the function call
-* `props` — JSON-parsed version of the relevent `el`s matching data-attribute
+- `el` — the DOM node that triggered the instance of the function call
+- `props` — JSON-parsed version of the relevent `el`s matching data-attribute
   value
 
 ### Life-cycle methods
@@ -89,15 +89,15 @@ of a view.
 `update` will be called whenever the value of a nodes matching data-attribute
 is changed. If defined, that method will be called with two arguments:
 
-* `nextProps` — JSON-parsed version of the current attribute value
-* `prevProps` — JSON-parsed version of the previous attribute value
+- `nextProps` — JSON-parsed version of the current attribute value
+- `prevProps` — JSON-parsed version of the previous attribute value
 
 #### Destroy
 
 `destroy` will be called whenever a node:
 
-* Is removed from the DOM
-* Has its relevant data-attribute removed
+- Is removed from the DOM
+- Has its relevant data-attribute removed
 
 ### Async views functions
 

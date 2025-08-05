@@ -11,7 +11,7 @@
     </script>
     <script type="module">
       import Defo from "@icelab/defo";
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         const views = {
           color: (el, color) => {
@@ -26,7 +26,7 @@
               destroy: () => {
                 console.log("Destroy color");
                 el.style.border = "none";
-              }
+              },
             };
           },
           content: (el, props) => {
@@ -38,9 +38,9 @@
               },
               destroy: () => {
                 el.innerHTML = original;
-              }
+              },
             };
-          }
+          },
         };
         const defo = Defo({ views });
       });
