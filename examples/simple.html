@@ -2,8 +2,16 @@
   <head>
     <meta charset="utf-8" />
     <title>Defo — Simple example</title>
-    <script src="../dist/index.bundle.js"></script>
-    <script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@icelab/defo": "../dist/index.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import Defo from "@icelab/defo";
+      
       document.addEventListener("DOMContentLoaded", () => {
         const views = {
           color: (el, color) => {
