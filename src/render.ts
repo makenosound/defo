@@ -1,4 +1,10 @@
-import { DefoHTMLElement, Views } from "./types";
+import {
+  DefoHTMLElement,
+  DestroyFn,
+  UpdateRawAttributeFn,
+  ViewFnReturnValue,
+  Views,
+} from "./types";
 import { dasherize, keyForDataset, parseProps } from "./helpers";
 
 // Render over a set of DOM Node and its children. Initialising any components
@@ -19,13 +25,13 @@ function viewName(el, props) {
 export default function renderTree({
   prefix,
   scope,
-  views
+  views,
 }: {
   prefix: string;
   views: Views;
   scope: HTMLElement;
 }) {
-  Object.keys(views).forEach(viewName => {
+  Object.keys(views).forEach((viewName) => {
     const attrName = `data-${prefix}-${dasherize(viewName)}`;
     let nodes = Array.prototype.slice.call(
       scope.querySelectorAll(`[${attrName}]`)
@@ -40,8 +46,6 @@ export default function renderTree({
   });
 }
 
-// TODO generate hash from views object and use to namespace? Would only be
-// useful for when individual view methods are updated (will that ever happen?)
 export function renderViewForNode(
   node: DefoHTMLElement,
   prefix: string,
@@ -58,9 +62,10 @@ export function renderViewForNode(
     return;
   }
   // Call the defined view function
+  const dataValue = node.dataset[datasetkey];
   const returnValue = viewFunction(
     node,
-    parseProps(node.dataset[datasetkey])
+    dataValue ? parseProps(dataValue) : undefined
   );
   // Set any update/destroy methods from the returned value of the view
   // call directly on the node.
@@ -70,36 +75,35 @@ export function renderViewForNode(
   node._defoDestroy[viewName] = unwrapDestroy(returnValue, node, viewName);
 }
 
-interface ViewReturnValue {
-  update?: Function;
-  destroy?: Function;
-}
-
 function unwrapUpdate(
-  returnValue: ViewReturnValue | Promise<ViewReturnValue>
-): Function {
-  return function(newProps: any, prevProps: any) {
-    newProps = newProps ? parseProps(newProps) : newProps;
-    prevProps = prevProps ? parseProps(prevProps) : prevProps;
-    Promise.resolve(returnValue).then(resolvedReturnValue => {
-      if (resolvedReturnValue.update) {
-        resolvedReturnValue.update(newProps, prevProps);
+  returnValue: ViewFnReturnValue | Promise<ViewFnReturnValue>
+): UpdateRawAttributeFn {
+  return function (newProps, prevProps) {
+    const resolvedNewProps = newProps ? parseProps(newProps) : newProps;
+    const resolvedPrevProps = prevProps ? parseProps(prevProps) : prevProps;
+    Promise.resolve(returnValue).then((resolvedReturnValue) => {
+      if (resolvedReturnValue && resolvedReturnValue.update) {
+        resolvedReturnValue.update(resolvedNewProps, resolvedPrevProps);
       }
     });
   };
 }
 
 function unwrapDestroy(
-  returnValue: ViewReturnValue | Promise<ViewReturnValue>,
+  returnValue: ViewFnReturnValue | Promise<ViewFnReturnValue>,
   node: DefoHTMLElement,
   viewName: string
-): Function {
-  return function() {
-    Promise.resolve(returnValue).then(resolvedReturnValue => {
-      if (resolvedReturnValue.destroy) {
+): DestroyFn {
+  return function () {
+    Promise.resolve(returnValue).then((resolvedReturnValue) => {
+      if (resolvedReturnValue && resolvedReturnValue.destroy) {
         resolvedReturnValue.destroy();
-        delete node._defoUpdate[viewName];
-        delete node._defoDestroy[viewName];
+        if (node._defoUpdate) {
+          delete node._defoUpdate[viewName];
+        }
+        if (node._defoDestroy) {
+          delete node._defoDestroy[viewName];
+        }
       }
     });
   };
