@@ -1,12 +1,18 @@
 # Defo
 
-A tiny library (2KB) that simplifies the process of attaching JavaScript
-behaviour to the DOM. It does a couple of things:
+A tiny library that simplifies the process of attaching JavaScript behaviour to the DOM. It does a
+couple of things:
 
 - Creates a pattern for attaching and scoping behaviour to specific parts of the
   DOM, and for passing data from the DOM to your JavaScript functions.
 - Defines an API for managing the life-cycle of DOM-attached behaviour
 - Magically handles that life-cycle by reacting to changes to the DOM
+
+## Installation
+
+```
+npm install @icelab/defo
+```
 
 ## Example usage
 
