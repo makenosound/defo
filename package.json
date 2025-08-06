@@ -5,6 +5,10 @@
     "dom",
     "library"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makenosound/defo"
+  },
   "private": false,
   "version": "1.0.0",
   "type": "module",
