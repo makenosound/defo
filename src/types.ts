@@ -27,4 +27,4 @@ export type ViewFn<
   T extends HTMLElement = HTMLElement,
 > = (node: T, props: P) => ViewFnReturnValue<P> | Promise<ViewFnReturnValue<P>>;
 
-export type Views = Record<string, ViewFn>;
+export type Views = Record<string, ViewFn<any>>;
