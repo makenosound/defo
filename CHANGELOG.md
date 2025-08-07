@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.0.1
+
+- [Export types properly](https://github.com/makenosound/defo/pull/21)
+
+## v1.0.0
+
+- [Update types](https://github.com/makenosound/defo/pull/18)
+
 ## v0.0.3
 
 - [Update dependencies](https://github.com/makenosound/defo/pull/6)
