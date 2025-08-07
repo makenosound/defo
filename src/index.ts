@@ -1,6 +1,15 @@
 import { Views } from "./types";
 import observe from "./observe";
 
+export type {
+  DestroyFn,
+  UpdateFn,
+  ViewFn,
+  ViewFnReturnValue,
+  Views,
+  ViewProps,
+} from "./types";
+
 export default function defo({
   prefix = "defo",
   scope = document.documentElement,
