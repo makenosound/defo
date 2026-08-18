@@ -69,7 +69,7 @@ View functions are at the core of defo’s functionality. They have a simple
 shape:
 
 ```js
-function viewName(el, props) {
+function viewName(el, props, { on, signal }) {
   return {
     update: (nextProps, prevProps) = {},
     destroy: () = {},
@@ -78,11 +78,14 @@ function viewName(el, props) {
 ```
 
 The view function itself will be called on initialization for a given DOM node,
-and will receive two agruments:
+and will receive three arguments:
 
 - `el` — the DOM node that triggered the instance of the function call
 - `props` — JSON-parsed version of the relevent `el`s matching data-attribute
   value
+- an object of event helpers — `on` and `signal` — for binding behaviour that
+  is automatically cleaned up when the view is destroyed (see
+  [Event helpers](#event-helpers) below)
 
 ### Life-cycle methods
 
@@ -104,6 +107,68 @@ is changed. If defined, that method will be called with two arguments:
 
 - Is removed from the DOM
 - Has its relevant data-attribute removed
+
+### Event helpers
+
+Each view function receives an `on` function and a `signal` as its third
+argument, for binding events (and other abortable behaviour) that is
+automatically torn down when the view is destroyed — whether that’s because
+the node was removed from the DOM or its `defo` attribute was removed.
+
+#### `on`
+
+`on` binds an event listener that’s removed for you on destroy, so there’s no
+need to keep a reference to it just to call `removeEventListener` later:
+
+```js
+function viewName(el, props, { on }) {
+  // Bound directly to `el`
+  on("click", (event) => { ... });
+}
+```
+
+Passing a selector delegates the listener to any matching descendant of `el` —
+including ones added to the DOM later — which is the recommended way to
+attach behaviour to child elements:
+
+```js
+function viewName(el, props, { on }) {
+  on("click", "[data-action='remove']", (event, matchedEl) => {
+    matchedEl.closest("li").remove();
+  });
+}
+```
+
+The delegated handler receives the original `event` along with `matchedEl`,
+the descendant element that matched the selector.
+
+An explicit target can be passed as the first argument, for binding directly
+to a specific child (useful for events that don’t bubble, like `focus` or
+`blur`):
+
+```js
+function viewName(el, props, { on }) {
+  const input = el.querySelector("input");
+  on(input, "blur", (event) => { ... });
+}
+```
+
+`on` can be called as many times as you like, including multiple times for
+the same event type — every listener registered through it is removed
+together when the view is destroyed.
+
+#### `signal`
+
+`signal` is an
+[`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
+that’s aborted when the view is destroyed. It’s there for cancelling other
+abortable work — like `fetch` — that isn’t an event listener:
+
+```js
+function viewName(el, props, { signal }) {
+  fetch(props.url, { signal }).then((response) => { ... });
+}
+```
 
 ### Async views functions
 
