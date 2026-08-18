@@ -1,3 +1,5 @@
+import type { EventHelpers } from "./events";
+
 export interface DefoHTMLElement extends HTMLElement {
   _defoDestroy?: Record<string, DestroyFn>;
   _defoUpdate?: Record<string, UpdateRawAttributeFn>;
@@ -25,6 +27,10 @@ export type ViewFnReturnValue<P extends ViewProps = ViewProps> = {
 export type ViewFn<
   P extends ViewProps = ViewProps,
   T extends HTMLElement = HTMLElement,
-> = (node: T, props: P) => ViewFnReturnValue<P> | Promise<ViewFnReturnValue<P>>;
+> = (
+  node: T,
+  props: P,
+  helpers: EventHelpers
+) => ViewFnReturnValue<P> | Promise<ViewFnReturnValue<P>>;
 
 export type Views = Record<string, ViewFn<any>>;

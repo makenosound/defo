@@ -9,6 +9,7 @@ export type {
   Views,
   ViewProps,
 } from "./types";
+export type { DelegatedEventHandler, EventHelpers, OnFn } from "./events";
 
 export default function defo({
   prefix = "defo",
